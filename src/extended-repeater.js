@@ -15,9 +15,44 @@ const { NotImplementedError } = require('../extensions/index.js');
  * => 'STRINGPLUS00PLUS00PLUS**STRINGPLUS00PLUS00PLUS**STRINGPLUS00PLUS00PLUS'
  *
  */
-function repeater(/* str, options */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+
+function makeOneStr(str, options, lastStr = false) {
+  if (lastStr) {
+    return str +
+      (options.addition + options.additionSeparator)
+        .repeat(options.additionRepeatTimes - 1) +
+      options.addition
+  } else {
+    return (str +
+      (options.addition +
+        options.additionSeparator)
+        .repeat(options.additionRepeatTimes - 1) +
+      options.addition + options.separator)
+  }
+}
+
+function repeater(str, options) {
+  let result = ''
+
+  let template = {
+    repeatTimes: 1,
+    separator: '+',
+    addition: '',
+    additionRepeatTimes: 1,
+    additionSeparator: '|'
+  }
+
+  let resultOptions = Object.assign({}, template, options)
+
+  if (str) str.toString()
+
+  if (resultOptions.addition) resultOptions.addition.toString()
+
+  result =
+    makeOneStr(str, resultOptions).repeat(resultOptions.repeatTimes - 1) +
+    makeOneStr(str, resultOptions, true)
+
+  return result
 }
 
 module.exports = {
