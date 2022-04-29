@@ -20,16 +20,80 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+
+  constructor(mode = true) {
+    this.mode = mode
   }
-  decrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+
+  encrypt(str, keyWord) {
+
+    if (!str || !keyWord) {
+      throw new Error('Incorrect arguments!')
+    }
+
+    let result = ''
+
+    for (let i = 0, j = 0; i < str.length; i++) {
+
+      let char = str.charAt(i)
+
+      if (char === ' ' || !char.match(/[a-zA-Z]/i)) {
+        result += char
+        continue
+      }
+      if (char === char.toUpperCase()) {
+        result += String.fromCharCode((char.charCodeAt(0) + keyWord.toUpperCase().charCodeAt(j) - 2 * 65) % 26 + 65)
+      } else {
+        result += String.fromCharCode((char.charCodeAt(0) + keyWord.toLowerCase().charCodeAt(j) - 2 * 97) % 26 + 97).toUpperCase()
+      }
+      j = ++j % keyWord.length
+    }
+
+    if (this.mode) {
+      return result
+    } else {
+      return result.split('').reverse().join('')
+    }
+  }
+
+  decrypt(str, keyWord) {
+
+    if (!str || !keyWord) {
+      throw new Error('Incorrect arguments!')
+    }
+
+    let result = ''
+
+    for (let i = 0, j = 0; i < str.length; i++) {
+
+      let char = str.charAt(i)
+
+      if (char === ' ' || !char.match(/[a-zA-Z]/i)) {
+        result += char
+        continue
+      }
+      if (char === char.toUpperCase()) {
+        result += String.fromCharCode(90 - (25 - (char.charCodeAt(0) - keyWord.toUpperCase().charCodeAt(j))) % 26)
+      } else {
+        result += String.fromCharCode(122 - (25 - (char.charCodeAt(0) - keyWord.toLowerCase().charCodeAt(j))) % 26)
+      }
+      j = ++j % keyWord.length
+    }
+
+    if (this.mode) {
+      return result
+    } else {
+      return result.split('').reverse().join('')
+    }
   }
 }
 
 module.exports = {
   VigenereCipheringMachine
 };
+
+const directMachine = new VigenereCipheringMachine();
+
+console.log(directMachine.encrypt('attack at dawn!', 'alphonse'))
+
+// 'AEIHQX SX DLLU!'
