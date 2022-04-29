@@ -79,6 +79,3 @@ function transform(arr) {
 module.exports = {
   transform
 };
-
-
-console.log(transform([1, 2, 3, '--double-next', 1337, '--double-prev', 4, 5]))
